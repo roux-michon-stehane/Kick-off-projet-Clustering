@@ -2,47 +2,73 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-iris = datasets.load_iris()
-df_iris = pd.DataFrame(iris.data)
-df_iris.columns=["Longueur_sepale", "Largeur_sepale", "Longueur_petale", "Largeur_petale"]
-df.head()
 
 class k_mean ():
-    def __init__(self, X_, k):
-        self.X_ = x
-        self.k = k
+    def __init__(self, x_init, K):
+        self.x_init = x_init
+        self.K = K
       
     def converteur ():
         x_min, x_max = X_[:, 0].min() - 0.5, X_[:, 0].max() + 0.5
         y_min, y_max = X_[:, 1].min() - 0.5, X_[:, 1].max() + 0.5
 
-    def k_mean():
+        return X_
         
-        centers = np.random.rand(k, 2) 
+    # Initialize les centroide de l'agoritme k-mean
+    def init_centroids(X, K):
+        m, n = X_.shape
+        centroids = np.zeros((k, 2))
+        for i in range(k):
+            centroid = X_[np.random.choice(range(m))]
+            centroids[i] = centroid
+        print(centroids)
+        return centroids
 
-        max_iterations = 10 
-        for it in range(max_iterations): 
-            labels = np.argmin(np.sqrt(X_[:,1])) 
- 
-            new_centers = np.array([X_[:,0].mean(axis=0)]) 
+    # Calculate the distance between each data point and each centroid
+    def distance(X, k, centroids):
+        k = centroids.shape[0]
+        dist = np.zeros((X_.shape[0], k))
+        for i in range(k):
+            dist[:, i] = np.linalg.norm(X_ - centroids[i], axis=1)
+        print(dist)
+        return dist
+
+    # Assign each data point to the closest centroid
+    def assign_centroids(X, dist):
+        return np.argmin(dist, axis=1)
+
+    # Calculate the new centroids based on the mean of each cluster
+    def calculate_centroids(X, idx, K):
+        n = X_.shape[1]
+        centroids = np.zeros((k, n))
+        for i in range(k):
+            centroids[i, :] = np.mean(X_, axis=0)
+        return centroids
     
-            if np.all(centers == new_centers): 
-                break 
-            
-        centers = new_centers 
- 
-        clusters = [[[centers] for i in range(k)]]
-        
-        def visulisation():
-            
-            fig = plt.figure()
-            ax = fig.add_subplot(111)
-            scatter = ax.scatter(X_[:, 0], X_[:, 1] ,c= clusters ,s=50)
-            for i,j in clusters:
-                ax.scatter(i,j,s=50,c='red',marker='+')
-            ax.set_xlabel('x')
-            ax.set_ylabel('y')
-            plt.colorbar(scatter)
+    # Implementation de la visualisation
+    def visualization (k, X_, centroids):
+        for j in range(k):
+            centroids[j] = np.mean(X_[assignments == j], axis=0)
 
-            fig.show()
-            return()
+        colors = ['b', 'g', 'r']
+        for j in range(k):
+            mask = (assignments == j)
+            plt.scatter(X_[mask, 0], X_[mask, 1], c=colors[j], label='Cluster {}'.format(j+1))
+            plt.scatter(centroids[j, 0], centroids[j, 1], c='k', marker='x')
+        plt.xlabel('Feature 1')
+        plt.ylabel('Feature 2')
+        plt.title('K-means clustering')
+        plt.legend()
+        plt.show()
+        return show 
+    
+
+    # Implementation du K-means clustering
+    def kmeans(X, K, max_iters,self):
+        centroids = init_centroids(X, K)
+        for i in range(max_iters):
+            dist = distance(X, centroids)
+            idx = assign_centroids(X, dist)
+            centroids = calculate_centroids(X, idx, K)
+        self.visualization   
+        return idx, centroids,visualization 
